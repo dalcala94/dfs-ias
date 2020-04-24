@@ -66,5 +66,13 @@ def print_result(result : dict):
 			print(match.teacher_name + ",", end=' ')
 		print()
 
-
+#Code heavily relies on Min and Appurva's initial matching algorithms...
+#function to randomely choose List.length() numer of times to assign/finalize matched instructors to a school in the region.
+#possible to teach multiple days (scheduled for x # of different schools on different days as pertaining to the instructors available data.
+#@param passed in region dictionary with school objects as keys and a List() of matched instructors as values.
+#@return a dict with the proposed instructor assignment to matched school keys
+def randInstructToSchool(regionAndschools: dict)
+{
+    
+}
 
