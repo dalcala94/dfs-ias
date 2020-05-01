@@ -1,5 +1,5 @@
 import loaddb
-import geocoder
+#import geocoder
 
 from collections import defaultdict
 
