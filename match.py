@@ -1,6 +1,6 @@
 class Match:
 	def __init__(self, TeacherName, SchoolName, Region, PreviousMentor,
-		Car, Languages, MultipleDays, Schedule):
+		Car, Languages, MultipleDays, Schedule, numOfInstructors):
 		self.teacher_name = TeacherName
 		self.school_name = SchoolName
 		self.region = Region
@@ -9,3 +9,4 @@ class Match:
 		self.languages = Languages
 		self.multiple_days = MultipleDays
 		self.schedule = Schedule
+		self.numOfInstructors = numOfInstructors
