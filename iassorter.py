@@ -73,31 +73,39 @@ def print_result(result : dict):
 #@return a dict with the proposed instructor assignment to matched school keys
 def randInstructToSchool(regionAndSchools: dict) -> dict:
 
-    #Empty result dict. Result will be populated with school as keys and List() of instructors as values.
-     resultDict = {}
+	#Empty result dict. Result will be populated with school as keys and List() of instructors as values.
+	resultDict = {}
 
-     #Assuming List() associated with a school in this region are not the same...?
-     for key in regionAndSchools:
-             listLength = len(regionAndSchools[key])
-             print(listLength)
-             #Grab number of instrutors needed @ each school to perform rand alg. use key.instructors?
-             instructNeed = key.instructors
-             print("School " + key.name + " Needs: " + instructNeed + " Instructors!")
+	print("First part for just testing purposes!")
+	#Assuming List() associated with a school in this region are not the same...?
+	for key in regionAndSchools:
+		listLength = len(regionAndSchools[key])
+		#print(listLength)
+		#Grab number of instrutors needed @ each school to perform rand alg. use key.instructors?
+		instructors_for_school = regionAndSchools[key]
+		print("School " + key + " Needs: " + str(listLength) + " Instructors!")
+	print()
+
+	
+	
+
+	
+
 
 
 ###Testing randInstructToSchool() functionality. (Run in python shell)###
 #Reading input params seperately. (WORKS)
-#ocList = ["Jimmy", "Rick", "Eliza", "Beck", "Audrey", "Dan"]
-#ocReg = dict(Lathrop= ocList, Carr= ocList, Prentice= ocList)
-#print(ocReg)
-#randInstructToSchool(ocReg)
+ocList = ["Jimmy", "Rick", "Eliza", "Beck", "Audrey", "Dan"]
+ocReg = dict(Lathrop= ocList, Carr= ocList, Prentice= ocList)
+print(ocReg)
+randInstructToSchool(ocReg)
 
 #Reading keys as objects and values as lists. (WORKS)
-#dummyList = [Instructor("Daniel", "M", "M", "OC", "UCI", 2021, "N", "MWTh", "Y", "Eng", "L", "N"), Instructor("Julian", "M", "M", "OC", "UCI", 2021, "N", "MWTh", "Y", "Eng", "L", "N")]
-#key1 = Institution("Lathrop", "112 Apple", "App", 1, "MW")
-#key2 = Institution("Carr", "28 Bahia", "App", 1, "TTh")
-#key3 = Institution("Prentice", "242 Alton", "App", 1, "MF")
-#dummyDict = dict(key1= dummyList, key2= dummyList, key3= dummyList) #if printed, only lists object name keys and associated value address locations in memory.
-#randInstructToSchool(dummyDict) #Output = 2 2 2 ; Result = 2 2 2 
+dummyList = [Instructor("Daniel", "M", "M", "OC", "UCI", 2021, "N", "M W Th", "Y", "Eng", "L", "N"), Instructor("Julian", "M", "M", "OC", "UCI", 2021, "N", "M W Th", "Y", "Eng", "L", "N")]
+key1 = Institution("Lathrop", "112 Apple", "App", "OC", 1, "M W")
+key2 = Institution("Carr", "28 Bahia", "App", "OC", 1, "T Th")
+key3 = Institution("Prentice", "242 Alton", "App", "OC", 1, "M F")
+dummyDict = dict(key1= dummyList, key2= dummyList, key3= dummyList) #if printed, only lists object name keys and associated value address locations in memory.
+#randInstructToSchool(dummyDict) #Output for dummyDict: {key1: [Instructor("Daniel", "M", "M", "OC", "UCI", 2021, "N", "M W Th", "Y", "Eng", "L", "N"), Instructor("Julian", "M", "M", "OC", "UCI", 2021, "N", "M W Th", "Y", "Eng", "L", "N")], key2: [], key3: []} 
 
 
