@@ -28,18 +28,37 @@ def load_instructor_data(filepath):
 		University = sheet.cell_value(i,4)
 		Year = sheet.cell_value(i,5)
 		PreviousMentor = sheet.cell_value(i,6)
-		Car = sheet.cell_value(i,10)
-		Languages = sheet.cell_value(i,11)
-		ShirtSize = sheet.cell_value(i,12)
-		MultipleDays = sheet.cell_value(i,13)
+		Car = sheet.cell_value(i,7)
+		Languages = sheet.cell_value(i,8)
+		ShirtSize = sheet.cell_value(i,9)
+		MultipleDays = sheet.cell_value(i,10)
 
 		Schedule = defaultdict(list)
 
+		Mon = minute_range(sheet.cell_value(i,11))
+		Tue = minute_range(sheet.cell_value(i,12))
+		Wed = minute_range(sheet.cell_value(i,13))
+		Thurs = minute_range(sheet.cell_value(i,14))
+		Fri = minute_range(sheet.cell_value(i,15))
+
+		if Mon != None:
+			Schedule[1].append(Mon)
+		if Tue != None:
+			Schedule[2].append(Tue)
+		if Wed != None:
+			Schedule[3].append(Wed)
+		if Thurs != None:
+			Schedule[4].append(Thurs)
+		if Fri != None:
+			Schedule[5].append(Fri)
+
+		'''
 		make_schedule(Schedule, (900,1020), build_list_int_days(sheet.cell_value(i,7)))
 		make_schedule(Schedule, (930,1050), build_list_int_days(sheet.cell_value(i,8)))
 		make_schedule(Schedule, (945,1065), build_list_int_days(sheet.cell_value(i,9)))
+		'''
 
-		update_schedule(Schedule)
+		#update_schedule(Schedule)
 
 		instructors.append(Instructor(Name, Gender, Ethnicity, Region,
 			University, Year, PreviousMentor, Schedule,
@@ -66,14 +85,31 @@ def load_institution_data(filepath):
 		County = sheet.cell_value(i, 2)
 		Program = sheet.cell_value(i,3)
 		Instructors = sheet.cell_value(i,4)
-		TimeRange = minute_range(sheet.cell_value(i,6))
 
 		Schedule = defaultdict(list)
 
+		Mon = minute_range(sheet.cell_value(i,5))
+		Tue = minute_range(sheet.cell_value(i,6))
+		Wed = minute_range(sheet.cell_value(i,7))
+		Thurs = minute_range(sheet.cell_value(i,8))
+		Fri = minute_range(sheet.cell_value(i,9))
+
+		if Mon != None:
+			Schedule[1].append(Mon)
+		if Tue != None:
+			Schedule[2].append(Tue)
+		if Wed != None:
+			Schedule[3].append(Wed)
+		if Thurs != None:
+			Schedule[4].append(Thurs)
+		if Fri != None:
+			Schedule[5].append(Fri)
+
+		'''
 		make_schedule(Schedule, TimeRange, 
 			build_list_int_days(sheet.cell_value(i,5)))
-
-		update_schedule(Schedule)
+		'''
+		#update_schedule(Schedule)
 
 		institutions.append(Institution(Name, Address, County, Program, 
 			Instructors, Schedule))
@@ -170,10 +206,11 @@ Converts string time range in the format 15:00 - 17:00
 to a tuple of integer minutes (900, 1020)
 '''
 def minute_range(time_range : str) -> (int, int):
-	start, end = time_range.split(" - ")
-	start_mins = hours_to_minutes(start)
-	end_mins = hours_to_minutes(end)
-	return (start_mins, end_mins)
+	if len(time_range) != 0:
+		start, end = time_range.split(" - ")
+		start_mins = hours_to_minutes(start)
+		end_mins = hours_to_minutes(end)
+		return (start_mins, end_mins)
 
 '''
 Converts a string of hours and minutes to an integer of minutes
@@ -237,5 +274,5 @@ instructors = load_instructor_data("shortinstructors.xlsx")
 institutions = load_institution_data("schoolsample.xlsx")
 '''
 
-
-
+#load_instructor_data("instructors.xlsx")
+load_institution_data("institutions.xlsx")
