@@ -165,7 +165,7 @@ def randInstructToSchool(regionAndSchools: dict) -> dict:
 
 #Reading keys as objects and values as lists. (WORKS)
 # dummyList = [Instructor("Daniel", "M", "M", "OC", "UCI", 2021, "N", "M W Th", "Y", "Eng", "L", "N"), Instructor("Julian", "M", "M", "OC", "UCI", 2021, "N", "M W Th", "Y", "Eng", "L", "N")]
-#ocDict = {Institution("Lathrop", "112 Apple", "App", 1, "MW"): dummyList, Institution("Carr","112 Apple", "App", 1, "TTh"): dummyList}
+#ocDict = {Institution("Lathrop", "112 Apple", "App", "OC", 1, "MW"): dummyList, Institution("Carr","112 Apple", "App", "OC", 1, "TTh"): dummyList}
 #randInstructToSchool(ocDict); OUTPUT: 2 School Lathrop Needs: 1 Instructors! 2 School Carr Needs: 1 Instructors! RESULT: 2 School Lathrop Needs: 1 Instructors! 2 School Carr Needs: 1 Instructors!
 #OUTPUT REFLECTS PRINT TESTS
 
