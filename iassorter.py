@@ -1,6 +1,6 @@
 import loaddb
 #import geocoder
-
+import random
 from collections import defaultdict
 
 from instructor import Instructor
@@ -69,37 +69,79 @@ def print_result(result : dict):
 			print(match.teacher_name + ",", end=' ')
 		print()
 
+#Helper for randInstructToSchool()		
+def myPrint(resultDict: dict):
+	for key in resultDict:
+		print(key.name, ':', end =' ')
+		for value in resultDict[key]:
+			print(value.name + ",", end=' ')
+		print("\n")
+
 #Code heavily relies on Min and Appurva's initial matching algorithms...
 #function to randomely choose List.length() numer of times to assign/finalize matched instructors to a school in the region.
 #possible to teach multiple days (scheduled for x # of different schools on different days as pertaining to the instructors available data.)
 #@param passed in region dictionary with school objects as keys and a List() of matched instructors as values.
 #@return a dict with the proposed instructor assignment to matched school keys
-def randInstructToSchool(instsAndInstructors: dict) -> dict:
+def randInstructToSchool(regionAndSchools: dict) -> dict:
 
 	#Empty result dict. Result will be populated with school as keys and List() of instructors as values.
 	resultDict = {}
-
-	#print("First part for just testing purposes!")
-	#Assuming List() associated with a school in this region are not the same...?
-	# for key in instsAndInstructors:
-	# 	print(instsAndInstructors[key])
-	# 	listLength = instsAndInstructors[key].numOfInstructors
-	# 	instructors_for_school = instsAndInstructors[key]
-	# 	print("School " + key + " Needs: " + str(listLength) + " Instructors!")
-	# 	print()
+	indexChecked = list()
 	
-	for school in instsAndInstructors:
-		print(school, ':', end =' ')
-		for match in instsAndInstructors[school]:
-			school_instructors_required = match.numOfInstructors
-			break
-		match_number = 0
-		for match in instsAndInstructors[school]:
-                                     if match_number==school_instructors_required:
-                                             break
-                                     print(match.teacher_name + ",", end=' ')
-                                     match_number+=1
-		print()
+	#Assuming List() associated with a school in this region are not the same...?
+	for key in regionAndSchools:
+		#Grab the actual amount of instructors paired with the school (key)
+		listLength = len(regionAndSchools[key])
+		newList = list()
+		#TEST#
+                #print(listLength)
+		
+		#Grab number of instrutors needed @ each school to perform rand alg & name for printing/Testing purposes.
+		instructNeed = key.instructors
+		#TEST#
+		#print("School " + key.name + " Needs: " + str(instructNeed) + " Instructors!")
+		
+		#Index for while control
+		teachCount = 0
+		while teachCount < instructNeed:
+			#Generate a randrange() 0 <= num < listLength and use to select matched Instructors from List() values. (What if a visited randnum is chosen again?)
+			randNum = int(random.randrange(0, listLength))
+			if randNum in indexChecked:
+				continue
+			else:
+				indexChecked.append(randNum)
+				#Accessing List() values and appending them to resultDict() (future: add more weights/specifications here...?)
+				value = regionAndSchools.get(key)
+				instructChosen = value[randNum]
+				newList.append(instructChosen)
+				teachCount+= 1
+				
+		#Populate resultDict()
+		resultDict[key] = newList
+		
+		#Cleanup
+		indexChecked.clear()
+		
+	#Helper print function here.
+	myPrint(resultDict)
+	
+	#Cleanup
+	newList.clear()
+	del resultDict
+
+	
+##	for school in instsAndInstructors:
+##		print(school, ':', end =' ')
+##		for match in instsAndInstructors[school]:
+##			school_instructors_required = match.numOfInstructors
+##			break
+##		match_number = 0
+##		for match in instsAndInstructors[school]:
+##                                     if match_number==school_instructors_required:
+##                                             break
+##                                     print(match.teacher_name + ",", end=' ')
+##                                     match_number+=1
+##		print()
 		#for match in instsAndInstructors[school]:
     			#print("School " + school + " Needs: " + str(match.numOfInstructors) + " Instructors!")
 
@@ -123,10 +165,9 @@ def randInstructToSchool(instsAndInstructors: dict) -> dict:
 
 #Reading keys as objects and values as lists. (WORKS)
 # dummyList = [Instructor("Daniel", "M", "M", "OC", "UCI", 2021, "N", "M W Th", "Y", "Eng", "L", "N"), Instructor("Julian", "M", "M", "OC", "UCI", 2021, "N", "M W Th", "Y", "Eng", "L", "N")]
-# key1 = Institution("Lathrop", "112 Apple", "App", "OC", 1, "M W")
-# key2 = Institution("Carr", "28 Bahia", "App", "OC", 1, "T Th")
-# key3 = Institution("Prentice", "242 Alton", "App", "OC", 1, "M F")
-# dummyDict = dict(key1= dummyList, key2= dummyList, key3= dummyList) #if printed, only lists object name keys and associated value address locations in memory.
-#randInstructToSchool(dummyDict) #Output for dummyDict: {key1: [Instructor("Daniel", "M", "M", "OC", "UCI", 2021, "N", "M W Th", "Y", "Eng", "L", "N"), Instructor("Julian", "M", "M", "OC", "UCI", 2021, "N", "M W Th", "Y", "Eng", "L", "N")], key2: [], key3: []} 
+#ocDict = {Institution("Lathrop", "112 Apple", "App", 1, "MW"): dummyList, Institution("Carr","112 Apple", "App", 1, "TTh"): dummyList}
+#randInstructToSchool(ocDict); OUTPUT: 2 School Lathrop Needs: 1 Instructors! 2 School Carr Needs: 1 Instructors! RESULT: 2 School Lathrop Needs: 1 Instructors! 2 School Carr Needs: 1 Instructors!
+#OUTPUT REFLECTS PRINT TESTS
 
-
+##Functionality of randInstructToSchool() (only considers schools # of instructors needed)##
+#randInstructToSchool(ocDict)
