@@ -8,12 +8,24 @@ def upload_matches():
 	result = iassorter.sort()
 
 	db = dfsapi.get_db()
+	
+	uploaded = set()
 
 	for school in result:
-		for match in result[school]:
-			match_dict = match_to_dict(match)
-			db.child("sortedroster").child(match.school_name).set(match_dict)
+		#for match in result[school]:
+		i=0
+		count=0
+		while count < 4:
+			match_dict = match_to_dict(result[school][i])
 
+			teacher = match_dict["TeacherName"]
+
+			if teacher not in uploaded:
+				uploaded.add(teacher)
+				db.child("sortedroster").child(school).child(teacher).set(match_dict)
+				count += 1
+
+			i += 1
 
 def match_to_dict(match : Match) -> dict:
 	match_dict = {"TeacherName" : match.teacher_name,
