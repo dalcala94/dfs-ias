@@ -26,6 +26,7 @@ def sort(instructorfp, institutionfp):
 	print_result(result)
 	print()
 	print("RESULT AFTER TRUNCATION:")
+	#print("List being passed to function: " + str(result))
 	randInstructToSchool(result)
 
 '''
@@ -72,9 +73,9 @@ def print_result(result : dict):
 #Helper for randInstructToSchool()		
 def myPrint(resultDict: dict):
 	for key in resultDict:
-		print(key.name, ':', end =' ')
+		print(key, ':', end =' ')
 		for value in resultDict[key]:
-			print(value.name + ",", end=' ')
+			print(value.teacher_name + ",", end=' ')
 		print("\n")
 
 #Code heavily relies on Min and Appurva's initial matching algorithms...
@@ -84,50 +85,53 @@ def myPrint(resultDict: dict):
 #@return a dict with the proposed instructor assignment to matched school keys
 def randInstructToSchool(regionAndSchools: dict) -> dict:
 
-	#Empty result dict. Result will be populated with school as keys and List() of instructors as values.
-	resultDict = {}
-	indexChecked = list()
+        #Empty result dict. Result will be populated with school as keys and List() of instructors as values.
+        resultDict = {}
+        indexChecked = list()
 	
-	#Assuming List() associated with a school in this region are not the same...?
-	for key in regionAndSchools:
-		#Grab the actual amount of instructors paired with the school (key)
-		listLength = len(regionAndSchools[key])
-		newList = list()
-		#TEST#
+        #Assuming List() associated with a school in this region are not the same...?
+        for key in regionAndSchools:
+                #Grab the actual amount of instructors paired with the school (key)
+                listLength = len(regionAndSchools[key])
+                newList = list()
+                #TEST#
                 #print(listLength)
-		
-		#Grab number of instrutors needed @ each school to perform rand alg & name for printing/Testing purposes.
-		instructNeed = key.instructors
-		#TEST#
-		#print("School " + key.name + " Needs: " + str(instructNeed) + " Instructors!")
-		
-		#Index for while control
-		teachCount = 0
-		while teachCount < instructNeed:
-			#Generate a randrange() 0 <= num < listLength and use to select matched Instructors from List() values. (What if a visited randnum is chosen again?)
-			randNum = int(random.randrange(0, listLength))
-			if randNum in indexChecked:
-				continue
-			else:
-				indexChecked.append(randNum)
-				#Accessing List() values and appending them to resultDict() (future: add more weights/specifications here...?)
-				value = regionAndSchools.get(key)
-				instructChosen = value[randNum]
-				newList.append(instructChosen)
-				teachCount+= 1
-				
-		#Populate resultDict()
-		resultDict[key] = newList
-		
-		#Cleanup
-		indexChecked.clear()
-		
-	#Helper print function here.
-	myPrint(resultDict)
-	
-	#Cleanup
-	newList.clear()
-	del resultDict
+                
+                #Grab number of instrutors needed @ each school to perform rand alg & name for printing/Testing purposes.
+                for match in regionAndSchools[key]:
+                        school_instructors_needed = match.numOfInstructors
+                #print("Number of instructors required for institution: " + str(school_instructors_needed))
+                
+                #TEST#
+                #print("School " + key.name + " Needs: " + str(instructNeed) + " Instructors!")
+                
+                #Index for while control
+                teachCount = 0
+                while teachCount < school_instructors_needed:
+                        #Generate a randrange() 0 <= num < listLength and use to select matched Instructors from List() values. (What if a visited randnum is chosen again?)
+                        randNum = int(random.randrange(0, listLength))
+                        if randNum in indexChecked:
+                                continue
+                        else:
+                                indexChecked.append(randNum)
+                                #Accessing List() values and appending them to resultDict() (future: add more weights/specifications here...?)
+                                value = regionAndSchools.get(key)
+                                instructChosen = value[randNum]
+                                newList.append(instructChosen)
+                                teachCount+= 1
+                                
+                #Populate resultDict()
+                resultDict[key] = newList
+                
+                #Cleanup
+                indexChecked.clear()
+                
+        #Helper print function here.
+        myPrint(resultDict)
+
+        #Cleanup
+        newList.clear()
+        del resultDict
 
 	
 ##	for school in instsAndInstructors:
