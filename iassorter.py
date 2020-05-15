@@ -68,7 +68,7 @@ def print_result(result : dict):
 		print(school, ':', end =' ')
 		for match in result[school]:
 			print(match.teacher_name + ",", end=' ')
-		print()
+		print("\n")
 
 #Helper for randInstructToSchool()		
 def myPrint(resultDict: dict):
@@ -94,6 +94,7 @@ def randInstructToSchool(regionAndSchools: dict) -> dict:
                 #Grab the actual amount of instructors paired with the school (key)
                 listLength = len(regionAndSchools[key])
                 newList = list()
+                assignedInstructorList = list() #The instructors chosen for that particular institution will be put in this list after assigning weights has been done
                 #TEST#
                 #print(listLength)
                 
@@ -117,8 +118,9 @@ def randInstructToSchool(regionAndSchools: dict) -> dict:
                                 #Accessing List() values and appending them to resultDict() (future: add more weights/specifications here...?)
                                 value = regionAndSchools.get(key)
                                 instructChosen = value[randNum]
-                                newList.append(instructChosen)
-                                teachCount+= 1
+                                if(assignWeights(instructChosen)):
+                                        newList.append(instructChosen)
+                                        teachCount+= 1
                                 
                 #Populate resultDict()
                 resultDict[key] = newList
@@ -132,6 +134,14 @@ def randInstructToSchool(regionAndSchools: dict) -> dict:
         #Cleanup
         newList.clear()
         del resultDict
+
+def assignWeights(instructorMatch: Match) -> bool:
+        #print("Was instructor prior mentor? " + instructorMatch.previous_mentor)
+        #print("Does the instructor have a car? " + instructorMatch.car)
+        if(instructorMatch.previous_mentor=="Yes" or instructorMatch.car=="Yes"):
+                return True
+        else:
+                return False
 
 	
 ##	for school in instsAndInstructors:
@@ -148,30 +158,3 @@ def randInstructToSchool(regionAndSchools: dict) -> dict:
 ##		print()
 		#for match in instsAndInstructors[school]:
     			#print("School " + school + " Needs: " + str(match.numOfInstructors) + " Instructors!")
-
-
-
-
-
-	
-	
-
-	
-
-
-
-###Testing randInstructToSchool() functionality. (Run in python shell)###
-#Reading input params seperately. (WORKS)
-# ocList = ["Jimmy", "Rick", "Eliza", "Beck", "Audrey", "Dan"]
-# ocReg = dict(Lathrop= ocList, Carr= ocList, Prentice= ocList)
-# print(ocReg)
-# randInstructToSchool(ocReg)
-
-#Reading keys as objects and values as lists. (WORKS)
-# dummyList = [Instructor("Daniel", "M", "M", "OC", "UCI", 2021, "N", "M W Th", "Y", "Eng", "L", "N"), Instructor("Julian", "M", "M", "OC", "UCI", 2021, "N", "M W Th", "Y", "Eng", "L", "N")]
-#ocDict = {Institution("Lathrop", "112 Apple", "App", "OC", 1, "MW"): dummyList, Institution("Carr","112 Apple", "App", "OC", 1, "TTh"): dummyList}
-#randInstructToSchool(ocDict); OUTPUT: 2 School Lathrop Needs: 1 Instructors! 2 School Carr Needs: 1 Instructors! RESULT: 2 School Lathrop Needs: 1 Instructors! 2 School Carr Needs: 1 Instructors!
-#OUTPUT REFLECTS PRINT TESTS
-
-##Functionality of randInstructToSchool() (only considers schools # of instructors needed)##
-#randInstructToSchool(ocDict)
