@@ -11,6 +11,7 @@ import fire from '../../.././config/fire';
 export default function AppjamRosterPage() {
 
     const [user, setUser] = useState(null);
+    const [isLoading, setIsLoading] = useState(false)
 
     let history = useHistory();
 
@@ -61,21 +62,45 @@ export default function AppjamRosterPage() {
         });
     },[]);
 
-    const sortClicked = (e, name) => {
-        history.push('/appjamhome/sortedroster');
+    const sortRoster = () => {
+        return fetch('/sort', {
+            method: 'POST', // or 'PUT'
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({"Program":"AppJam+"}),
+        })
+        .then(response => response.json())
+    }
+
+    const promiseRoster = () =>{
+        return Promise.all([sortRoster()])
+    }
+
+    const sortClicked = (e) => {
+        // history.push('/appjamhome/sortedroster');
+        setIsLoading(!isLoading);
+        promiseRoster()
+        .then(([sorted]) => {
+            // both have loaded!
+            setIsLoading(!isLoading);
+            console.log("PROMISE DONE!!!!",sorted);
+            history.push('/appjamhome/sortedroster');
+        })
     }
 
     return (
         <div>
-            {/* <SideNavBar />
-            <div className="programPageContainer">
-                <h1 className="sortedPagePageTitle">appjam+ [SEASON] [YEAR]</h1>
-                <SortingPagesNavbar />
-            </div> */}
-
+            {isLoading?(
+                <div style={loading}>
+                <h3>SORTING.... Please Wait.</h3>
+            </div>
+            ):null}
+    
             <TitleToolbar program="appjam+" season="Spring" year="2020" urlPath="appjam"/>
 
             <div className="programPageContainer">
+                
 
                 <div style={sortBtnContainer}>
                     <button onClick={sortClicked} style={sortBtn}>SORT!</button>
@@ -153,4 +178,16 @@ const sortBtn = {
     paddingRight: "15px",
     marginLeft: "10px"
 
+}
+
+const loading = {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    position: "absolute",
+    width: "100vw",
+    height: "100vh",
+    backgroundColor: "rgba(32, 46, 71, 0.7)",
+    color: "white"
 }

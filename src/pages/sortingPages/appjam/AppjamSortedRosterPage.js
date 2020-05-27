@@ -75,8 +75,10 @@ export default function AppjamSortedRosterPage() {
             
         }
     );
+    const [isLoading, setIsLoading] = useState(false)
     const [schools, setSchools] = useState([]);    
     const sortedRosterCollection = useRef(fire.database().ref().child('sortedroster'))
+    const appjamSortedRosterCollection = useRef(fire.database().ref().child('AppJam+/matches'))
 
     //History hook for navigation
     let history = useHistory();
@@ -93,47 +95,149 @@ export default function AppjamSortedRosterPage() {
           })
       },[]);
 
-      
-    useEffect(() => {
-        sortedRosterCollection.current.once('value', (snap) => {
-            const roster = []
+      useEffect(() => {
+        fetch("/hello").then(response =>
+        response.json().then(data => {
+            console.log(data)
+            console.log("API WORKED!!")
+        }))
+
+        var latestRoster = 0;
+        appjamSortedRosterCollection.current.on('value', (snap) => {
             snap.forEach((doc) =>{
-                const school = doc.key;
-                const mentorList = doc.val();
-                const mentorArray = [];
-                for (var k in mentorList){
-                    mentorArray.push(
-                        {
-                            "name":k,
-                            "firstName": k.split(" ")[0],
-                            "car": mentorList[k]["Car"],
-                            "languages": mentorList[k]["Languages"],
-                            "multipleDays": mentorList[k]["MultipleDays"],
-                            "prevMentor": mentorList[k]["PreviousMentor"],
-                            "region": mentorList[k]["Region"],
-                            "schoolName": mentorList[k]["SchoolName"],
-                        }
-                    )
+                console.log(parseInt(doc.key), "NEW!!!!NEW!!!")
+                if (latestRoster < doc.key){
+                    latestRoster = doc.key
                 }
-                // console.log(mentorArray)
-                const schoolMentor = {school:school, mentors: mentorArray};
-                roster.push(schoolMentor);
             });
-            setSchools(roster);
+            console.log("LATEST ROSTER:",latestRoster)
         });
-    },[]);
 
-    console.log(carr)
-    console.log(schools)
+        appjamSortedRosterCollection.current.once('value', (snap) => {     
+            const roster = []       
+            snap.forEach((doc) =>{
+                if (latestRoster === doc.key){
+                    console.log("LATEST ROSTER DOC.KEY:",doc.key, doc.val())
+                    const schoolArray = doc.val();
+                    for (var school in schoolArray){
+                        console.log(school)
+                        const mentorInfoArray = []
+                        for (var mentor in schoolArray[school]){
+                            // console.log(schoolArray[school][mentor]["Languages"])
+                            mentorInfoArray.push(
+                                {
+                                    "name":schoolArray[school][mentor]["TeacherName"],
+                                    "firstName": schoolArray[school][mentor]["TeacherName"].split(" ")[0],
+                                    "car": schoolArray[school][mentor]["Car"],
+                                    "languages": schoolArray[school][mentor]["Languages"],
+                                    "multipleDays": schoolArray[school][mentor]["MultipleDays"],
+                                    "prevMentor": schoolArray[school][mentor]["PreviousMentor"],
+                                    "region": schoolArray[school][mentor]["Region"],
+                                    "schoolName": schoolArray[school][mentor]["SchoolName"],
+                                }
+                            )
+                        }
+                        roster.push({"school":school, "mentors":mentorInfoArray})
+                    }
+                    console.log("THE NEW ROSTER YES",roster)
+                }
+            });
+            setSchools(roster)
+        });
 
-    const test = () => {
-        return {"school":"carr"}
+        // const data = {"Program":"AppJam+"};
+
+        // fetch('/sort', {
+        //     method: 'POST', // or 'PUT'
+        //     headers: {
+        //         'Content-Type': 'application/json',
+        //     },
+        //     body: JSON.stringify(data),
+        // })
+        // .then(response => response.json())
+        // .then(data => {
+        // console.log('Success:', data);
+        // })
+        // .catch((error) => {
+        //     console.error('Error:', error);
+        // });
+        
+
+      },[]);
+
+      
+    // useEffect(() => {
+    //     sortedRosterCollection.current.once('value', (snap) => {
+    //         const roster = []
+    //         snap.forEach((doc) =>{
+    //             const school = doc.key;
+    //             const mentorList = doc.val();
+    //             const mentorArray = [];
+    //             for (var k in mentorList){
+    //                 mentorArray.push(
+    //                     {
+    //                         "name":k,
+    //                         "firstName": k.split(" ")[0],
+    //                         "car": mentorList[k]["Car"],
+    //                         "languages": mentorList[k]["Languages"],
+    //                         "multipleDays": mentorList[k]["MultipleDays"],
+    //                         "prevMentor": mentorList[k]["PreviousMentor"],
+    //                         "region": mentorList[k]["Region"],
+    //                         "schoolName": mentorList[k]["SchoolName"],
+    //                     }
+    //                 )
+    //             }
+    //             // console.log(mentorArray)
+    //             const schoolMentor = {school:school, mentors: mentorArray};
+    //             roster.push(schoolMentor);
+    //         });
+    //         setSchools(roster);
+    //     });
+    // },[]);
+
+    // console.log(carr)
+    // console.log(schools)
+
+    // const test = () => {
+    //     return {"school":"carr"}
+    // }
+
+    const sortRoster = () => {
+        return fetch('/sort', {
+            method: 'POST', // or 'PUT'
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({"Program":"AppJam+"}),
+        })
+        .then(response => response.json())
     }
 
+    const promiseRoster = () =>{
+        return Promise.all([sortRoster()])
+    }
+
+    const resortClicked = (e) => {
+        // history.push('/appjamhome/sortedroster');
+        setIsLoading(!isLoading);
+        promiseRoster()
+        .then(([sorted]) => {
+            // both have loaded!
+            setIsLoading(!isLoading);
+            console.log("PROMISE DONE=RESORTED!!!!",sorted);
+            window.location.reload();
+        })
+    }
 
 
     return (
         <div>
+            {isLoading?(
+                <div style={loading}>
+                <h3>RE-SORTING.... Please Wait.</h3>
+            </div>
+            ):null}
+
             <TitleToolbar program="appjam+" season="Spring" year="2020" urlPath="appjam"/>
 
             <div className="programPageContainer">
@@ -167,7 +271,7 @@ export default function AppjamSortedRosterPage() {
                     </div>
 
                     <div style={saveResort}>
-                        <button style={resortBtn}>Re-sort!</button>
+                        <button style={resortBtn} onClick={resortClicked}>Re-sort!</button>
                         <button style={saveBtn}>SAVE!</button>
                     </div>
                 </div>
@@ -276,4 +380,16 @@ const iconGuideTextStyle = {
     marginLeft: "3px",
     color: "#202E47",
     color: "#49479D"
+}
+
+const loading = {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    position: "absolute",
+    width: "100vw",
+    height: "100vh",
+    backgroundColor: "rgba(32, 46, 71, 0.7)",
+    color: "white"
 }
