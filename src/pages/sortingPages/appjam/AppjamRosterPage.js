@@ -67,10 +67,13 @@ export default function AppjamRosterPage() {
             method: 'POST', // or 'PUT'
             headers: {
                 'Content-Type': 'application/json',
+                'Accept': 'application/json'
             },
             body: JSON.stringify({"Program":"AppJam+"}),
         })
-        .then(response => response.json())
+        // .then(response => response.json())
+        .then(response => response.text())
+        .then(text => console.log(text))
     }
 
     const promiseRoster = () =>{
