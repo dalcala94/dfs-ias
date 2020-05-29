@@ -24,57 +24,6 @@ export default function AppjamSortedRosterPage() {
 
     //User auth 
     const [user, setUser] = useState(null);
-
-    //dummy data
-    const [carr, setCarr] = useState(
-        {
-            "school": "Carr Intermediate",
-            "mentors": [
-                {
-                    "name":"Hannah Fragante",
-                    "firstName": "Hannah",
-                    "car": "Yes",
-                    "languages": "Tagalog",
-                    "multipleDays": "Yes",
-                    "prevMentor": "Yes",
-                    "region": "Orange County",
-                    "schoolName": "Carr",
-                },
-                {
-                    "name":"Dylan Fragante",
-                    "firstName": "Dylan",
-                    "car": "Yes",
-                    "languages": "Tagalog",
-                    "multipleDays": "Yes",
-                    "prevMentor": "No",
-                    "region": "Orange County",
-                    "schoolName": "Carr",
-                },
-                {
-                    "name":"Annie Fragante",
-                    "firstName": "Annie",
-                    "car": "Yes",
-                    "languages": "Tagalog",
-                    "multipleDays": "Yes",
-                    "prevMentor": "Yes",
-                    "region": "Orange County",
-                    "schoolName": "Carr",
-                },
-                {
-                    "name":"Deodato Fragante",
-                    "firstName": "Deodato",
-                    "car": "Yes",
-                    "languages": "Tagalog",
-                    "multipleDays": "Yes",
-                    "prevMentor": "Yes",
-                    "region": "Orange County",
-                    "schoolName": "Carr",
-                },
-
-            ]
-            
-        }
-    );
     const [isLoading, setIsLoading] = useState(false)
     const [schools, setSchools] = useState([]);    
     const sortedRosterCollection = useRef(fire.database().ref().child('sortedroster'))
@@ -96,12 +45,6 @@ export default function AppjamSortedRosterPage() {
       },[]);
 
       useEffect(() => {
-        fetch("/hello").then(response =>
-        response.json().then(data => {
-            console.log(data)
-            console.log("API WORKED!!")
-        }))
-
         var latestRoster = 0;
         appjamSortedRosterCollection.current.on('value', (snap) => {
             snap.forEach((doc) =>{
