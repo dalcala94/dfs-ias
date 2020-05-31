@@ -71,9 +71,9 @@ export default function AppjamRosterPage() {
             },
             body: JSON.stringify({"Program":"AppJam+"}),
         })
-        // .then(response => response.json())
-        .then(response => response.text())
-        .then(text => console.log(text))
+        .then(response => response.json())
+        // .then(response => response.text())
+        // .then(text => console.log(text))
     }
 
     const promiseRoster = () =>{
