@@ -18,7 +18,7 @@ import lock from '../.././assets/lock.png';
     This component contains instructor info once you expand the card
     it also has the edit options which contains "Move, lock, and delete"
 */
-export default function DropdownInstructorInfo({person, mentorsFromProps, savedIconIndex, savedIcon}) {
+export default function DropdownInstructorInfo({program, person, mentorsFromProps, savedIconIndex, savedIcon}) {
 
     // style to determine where to render options menu when clicked
     const[optionsMenuPosition, setOptionsMenuPosition] = useState({
@@ -29,7 +29,7 @@ export default function DropdownInstructorInfo({person, mentorsFromProps, savedI
     const[isOptionsMenuOpen, setIsOptionsMenuOpen] = useState(false);
 
     //toggle condition for locking instructors
-    const[isLocked, setIsLocked] = useState(false)
+    const[isLocked, setIsLocked] = useState(person.isLocked)
 
     //toggle condition for moving instructors
     const[isMove, setIsMove] = useState(false);
@@ -64,12 +64,42 @@ export default function DropdownInstructorInfo({person, mentorsFromProps, savedI
     //function that triggers when lock button is clicked
     const lockBtnClicked = (e, name) => {
         console.log("LOCK " + name);
+
+        if (isLocked){
+            fetch('/unlockinstructor', {
+                method: 'POST', // or 'PUT'
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({"Program":program, "TeacherName": person.name, "SchoolName":person.schoolName}),
+            })
+            .then(response => response.json())
+        }else{
+            fetch('/lockinstructor', {
+                method: 'POST', // or 'PUT'
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({"Program":program, "TeacherName": person.name, "SchoolName":person.schoolName}),
+            })
+            .then(response => response.json())
+        }
+        window.location.reload();
         setIsLocked(!isLocked);
     }
 
     //function that triggers when delete button is clicked
-    const deleteBtnClicked = (e, name) => {
-        console.log("DELETE " + name);
+    const pendingBtnClicked = (e, name) => {
+        console.log("PENDING " + name);
+        fetch('/removeinstructor', {
+            method: 'POST', // or 'PUT'
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({"Program":program, "TeacherName": person.name, "SchoolName":person.schoolName}),
+        })
+        .then(response => response.json())
+        window.location.reload();
     }
 
     return (
@@ -85,9 +115,9 @@ export default function DropdownInstructorInfo({person, mentorsFromProps, savedI
                     <div style={optionsMenuPosition}>
                         {isOptionsMenuOpen?(
                             <div className="optionsMenu">
-                                <button onClick={(e) => { moveBtnClicked(e, person.name) }} className="optionBtn moveBtn">MOVE</button>
+                                {/* <button onClick={(e) => { moveBtnClicked(e, person.name) }} className="optionBtn moveBtn">MOVE</button> */}
                                 <button onClick={(e) => { lockBtnClicked(e, person.name) }} className="optionBtn lockBtn">{isLocked?"Unlock":"Lock"}</button>
-                                <button onClick={(e) => { deleteBtnClicked(e, person.name) }} className="optionBtn deleteBtn">Pending</button>
+                                <button onClick={(e) => { pendingBtnClicked(e, person.name) }} className="optionBtn deleteBtn">Pending</button>
                             </div>
                         ):null}
                     </div>

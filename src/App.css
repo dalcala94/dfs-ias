@@ -356,7 +356,7 @@ a{
   flex-direction: column;
 	justify-content: center;
   align-items: center;
-  height: 70px;
+  height: 48px;
   width: 68px;
   background-color: #FFFFFF;
   border-radius: 10px;
@@ -387,6 +387,8 @@ a{
 
 .lockBtn{
  color: #0099FF;
+ border-top-left-radius: 10px;
+ border-top-right-radius: 10px;
 }
 
 .deleteBtn{

@@ -67,38 +67,117 @@ export default function AppjamSortedRosterPage() {
     },[]);
 
     //accesses firebase for the sorted roster
-    const sortedRosterCollection = useRef(fire.database().ref().child('sortedroster'))
+    // const sortedRosterCollection = useRef(fire.database().ref().child('sortedroster'))
 
     //accesses firebase for the sorted roster
-    useEffect(() => {
-        sortedRosterCollection.current.once('value', (snap) => {
-            const roster = []
-            snap.forEach((doc) =>{
-                const school = doc.key;
-                const mentorList = doc.val();
-                const mentorArray = [];
-                for (var k in mentorList){
-                    mentorArray.push(
-                        {
-                            "name":k,
-                            "firstName": k.split(" ")[0],
-                            "car": mentorList[k]["Car"],
-                            "languages": mentorList[k]["Languages"],
-                            "multipleDays": mentorList[k]["MultipleDays"],
-                            "prevMentor": mentorList[k]["PreviousMentor"],
-                            "region": mentorList[k]["Region"],
-                            "schoolName": mentorList[k]["SchoolName"],
-                        }
-                    )
-                }
-                const schoolMentor = {school:school, mentors: mentorArray};
-                roster.push(schoolMentor);
-            });
-            setSchools(roster);
-        });
-    },[]);
+    // useEffect(() => {
+    //     sortedRosterCollection.current.once('value', (snap) => {
+    //         const roster = []
+    //         snap.forEach((doc) =>{
+    //             const school = doc.key;
+    //             const mentorList = doc.val();
+    //             const mentorArray = [];
+    //             for (var k in mentorList){
+    //                 mentorArray.push(
+    //                     {
+    //                         "name":k,
+    //                         "firstName": k.split(" ")[0],
+    //                         "car": mentorList[k]["Car"],
+    //                         "languages": mentorList[k]["Languages"],
+    //                         "multipleDays": mentorList[k]["MultipleDays"],
+    //                         "prevMentor": mentorList[k]["PreviousMentor"],
+    //                         "region": mentorList[k]["Region"],
+    //                         "schoolName": mentorList[k]["SchoolName"],
+    //                     }
+    //                 )
+    //             }
+    //             const schoolMentor = {school:school, mentors: mentorArray};
+    //             roster.push(schoolMentor);
+    //         });
+    //         setSchools(roster);
+    //     });
+    // },[]);
 
-    // console.log(schools)
+    const appjamSortedRosterCollection = useRef(fire.database().ref().child('AppJam+/matches'));
+    const firstChild = useRef(fire.database().ref().child('AppJam+/matches').limitToFirst(1));
+
+    useEffect(() => {
+        var matchesLen = 0;
+
+        var latestRoster = 0;
+        appjamSortedRosterCollection.current.on('value', (snap) => {
+            matchesLen = snap.numChildren();
+            console.log("NUMBER OF MATCHES", matchesLen)
+            snap.forEach((doc) =>{
+                console.log(parseInt(doc.key), "NEW!!!!NEW!!!")
+                if (latestRoster < doc.key){
+                    latestRoster = doc.key
+                }
+            });
+            console.log("LATEST ROSTER:",latestRoster)
+            
+            if (parseInt(matchesLen) > 10){
+                console.log("ADASDDASDSADSA", matchesLen)
+                firstChild.current.once('value', (snap) => {
+                    snap.forEach((doc) =>{
+                        console.log("OLDEST MATCH",doc.key);
+                        doc.ref.remove();
+                    });
+                })
+            }
+        });
+
+
+        appjamSortedRosterCollection.current.once('value', (snap) => {     
+            const roster = []      
+            snap.forEach((doc) =>{
+                if (latestRoster === doc.key){
+                    console.log("LATEST ROSTER DOC.KEY:",doc.key, doc.val())
+                    const schoolArray = doc.val();
+                    for (var school in schoolArray){
+                        console.log(school)
+                        const mentorInfoArray = []
+                        for (var mentor in schoolArray[school]){
+                            // console.log(schoolArray[school][mentor]["Languages"])
+                            if (schoolArray[school][mentor]["TeacherName"] != undefined){
+                            // if (schoolArray[school] != "Locked" || ){
+                                mentorInfoArray.push(
+                                    {
+                                        "name":schoolArray[school][mentor]["TeacherName"],
+                                        "firstName": schoolArray[school][mentor]["TeacherName"].split(" ")[0],
+                                        "car": schoolArray[school][mentor]["Car"],
+                                        "ethnicity": schoolArray[school][mentor]["Ethnicity"],
+                                        "gender": schoolArray[school][mentor]["Gender"],
+                                        "languages": schoolArray[school][mentor]["Languages"],
+                                        "multipleDays": schoolArray[school][mentor]["MultipleDays"],
+                                        "prevMentor": schoolArray[school][mentor]["PreviousMentor"],
+                                        "shirtSize": schoolArray[school][mentor]["ShirtSize"],
+                                        "university": schoolArray[school][mentor]["University"],
+                                        "year": schoolArray[school][mentor]["Year"],
+                                        "teacherSchedule": schoolArray[school][mentor]["TeacherSchedule"],
+                                        "region": schoolArray[school][mentor]["Region"],
+                                        "schoolName": schoolArray[school][mentor]["SchoolName"],
+                                        "schoolSchedule": schoolArray[school][mentor]["Schedule"],
+                                        "isLocked": schoolArray[school][mentor]["Locked"],
+                                    }
+                                )
+                            }
+                            
+                        }
+                        // console.log("AJDLSAJDLKSADSA", school)
+                        if (school === "Locked" || school === "Removed" || school === "Available"){
+                            console.log("THIS IS LOCKED, SKIP", school)
+                        }else{
+                            roster.push({"school":school, "mentors":mentorInfoArray})
+                        }
+                        
+                    }
+                    // console.log("THE NEW ROSTER YES",roster)
+                }
+            });
+            setSchools(roster)
+        });
+      },[]);
 
     //shows modal if user really wants to re-sort
     const resortClicked = () => {
@@ -109,6 +188,14 @@ export default function AppjamSortedRosterPage() {
     //re-sort when clicked yes on the modal
     const resortYes = () => {
         console.log("YES RESORT!");
+        fetch('/sort', {
+            method: 'POST', // or 'PUT'
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({"Program":"AppJam+"}),
+        })
+        .then(response => response.json())
         setShowResortModal(!showResortModal);
     }
 
@@ -181,13 +268,13 @@ export default function AppjamSortedRosterPage() {
                 
                 <div className="sortedInstructorCardsWrapper">
                     <div style={pendingLockedContainer}>
-                        <PendingList/>
-                        <LockedList />
+                        <PendingList program="AppJam+"/>
+                        <LockedList program="AppJam+"/>
                     </div>
 
                     <div className="instructorCardsContainer">
                         {schools.map((schoolMentors,i) => (
-                            <SortedInstructorsCard instructors={schoolMentors} SbgColor="#7FC9FF" SborderColor="#0099FF" key={schoolMentors.school}/>
+                            <SortedInstructorsCard program="AppJam+" instructors={schoolMentors} SbgColor="#7FC9FF" SborderColor="#0099FF" key={schoolMentors.school}/>
                         ))}
                     </div>
                 </div>

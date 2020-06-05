@@ -65,9 +65,9 @@ export default function HoveredInstructorInfo({person, savedIconIndex, savedIcon
                                         <h3 style={hoverName}>{person.name}</h3>
                                     </div>
                                     <div className="hoverMoreInfoHeaderYearGenderEthnicity">
-                                        <h3 style={hoverYearGenderEthnicityText}>4th+</h3>
-                                        <h3 style={hoverYearGenderEthnicityText}>Male</h3>
-                                        <h3 style={hoverYearGenderEthnicityText}>Caucasian</h3>
+                                        <h3 style={hoverYearGenderEthnicityText}>{person.year}</h3>
+                                        <h3 style={hoverYearGenderEthnicityText}>{person.gender}</h3>
+                                        <h3 style={hoverYearGenderEthnicityText}>{person.ethnicity}</h3>
                                     </div>
                                 </div>
                             </div>
@@ -76,7 +76,7 @@ export default function HoveredInstructorInfo({person, savedIconIndex, savedIcon
                                 <div className="hoverMoreInfoDetailsRegionSchoolSchedContainer">
                                     <div className="hoverMoreInfoDetailsRegionSchoolGrid">
                                         <h3 style={hoverRegionSchoolText}>{person.region}</h3>
-                                        <h3 style={hoverRegionSchoolText}>University of California Irvine</h3>
+                                        <h3 style={hoverRegionSchoolText}>{person.university}</h3>
                                     </div>
                                     <div className="hoverMoreInfoDetailsSchedGrid">
                                         <h6 style={hoverSchedDays}>M</h6>
@@ -103,7 +103,7 @@ export default function HoveredInstructorInfo({person, savedIconIndex, savedIcon
                                         </div>
                                         <div className="hoverMoreInfoDetailsOtherItem">
                                             <img src={shirt} style={hoverDetailIcon}/>
-                                            <h3 style={hoverDetailText}>XS</h3>
+                                            <h3 style={hoverDetailText}>{person.shirtSize}</h3>
                                         </div>
                                         <div className="hoverMoreInfoDetailsOtherItem">
                                             <img src={language} style={hoverDetailIcon}/>

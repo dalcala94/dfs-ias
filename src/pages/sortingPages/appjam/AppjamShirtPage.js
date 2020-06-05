@@ -52,10 +52,19 @@ export default function AppjamSortedRosterPage() {
     },[]);
 
     //gets the appjam shirt size info fromt he database using firebase
-    const sortedRosterCollection = useRef(fire.database().ref().child('shirts'))
+    const sortedRosterCollection = useRef(fire.database().ref().child('AppJam+/shirts'))
 
     //gets the info from firebase
     useEffect(() => {
+        fetch('/shirts', {
+            method: 'POST', // or 'PUT'
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({"Program":"AppJam+"}),
+        })
+        .then(response => response.json())
+
         sortedRosterCollection.current.once('value', (snap) => {
             const shirtSizes = {}
             // const roster = []

@@ -36,7 +36,7 @@ import fire from '../../config/fire';
     This component is a expandlable card that contains all instructor
     and school info
 */
-export default function SortedInstructorsCard({SbgColor, SborderColor, instructors}) {
+export default function SortedInstructorsCard({program, SbgColor, SborderColor, instructors}) {
 
     //User auth 
     const [user, setUser] = useState(null);
@@ -121,7 +121,7 @@ export default function SortedInstructorsCard({SbgColor, SborderColor, instructo
         if (typeof instructors !== 'undefined'){
             for(var k in instructors["mentors"]){
                 // console.log(k + ": " + instructors["mentors"][k])
-                console.log(instructors["mentors"][k]);
+                // console.log(instructors["mentors"][k]);
                 count++
                 // setInstructorsCount(instructorsCount+1)
                 // console.log(instructorsCount)
@@ -129,7 +129,7 @@ export default function SortedInstructorsCard({SbgColor, SborderColor, instructo
             // console.log(count)
             setInstructorsCount(count);
             setMentorsFromProps(instructors["mentors"]);
-            console.log(instructorsCount);
+            // console.log(instructorsCount);
         }
 
         if (savedIcon.length < instructorsCount){
@@ -138,7 +138,7 @@ export default function SortedInstructorsCard({SbgColor, SborderColor, instructo
             }
         }
     });
-    console.log("mentors from props "+mentorsFromProps)
+    // console.log("mentors from props "+mentorsFromProps)
 
     //function when down arrow to expand card is clicked
     const toggleMoreInfo = (e) => {
@@ -198,7 +198,7 @@ export default function SortedInstructorsCard({SbgColor, SborderColor, instructo
 
                         {typeof instructors !== 'undefined'?
                             instructors["mentors"].map((person, i) =>(
-                                <DropdownInstructorInfo key={person.name} person={person} mentorsFromProps={mentorsFromProps} savedIconIndex={i} savedIcon={savedIcon}/>
+                                <DropdownInstructorInfo key={person.name} program={program} person={person} mentorsFromProps={mentorsFromProps} savedIconIndex={i} savedIcon={savedIcon}/>
                             ))
 
                         :null}
