@@ -16,8 +16,109 @@ a{
   text-decoration: none;
 }
 
+td{
+  font-size: 13px;
+}
 
+/*  --------------- Table Headers --------------- */
+.name{
+  display: inline-block;
+  font-size: 18px;
+}
 
+.gender{
+  display: inline-block;
+  padding-left: 100px;
+  font-size: 18px;
+}
+
+.ethnicity{
+  display: inline-block;
+  padding-left: 10px;
+  font-size: 18px;
+}
+
+.languages{
+  display: inline-block;
+  padding-left: 70px;
+  font-size: 18px;
+}
+.university{
+  display: inline-block;
+  padding-left: 20px;
+  font-size: 18px;
+}
+
+.year{
+  display: inline-block;
+  padding-left: 10px;
+  font-size: 18px;
+}
+
+.region{
+  display: inline-block;
+  padding-left: 15px;
+  font-size: 18px;
+}
+
+.monday{
+  display: inline-block;
+  width: 150px;
+  font-size: 18px;
+}
+
+.tuesday{
+  display: inline-block;
+  width: 150px;
+  font-size: 18px;
+}
+
+.wednesday{
+  display: inline-block;
+  width: 150px;
+  font-size: 18px;
+}
+
+.thursday{
+  display: inline-block;
+  width: 150px;
+  font-size: 18px;
+}
+
+.friday{
+  display: inline-block;
+  width: 150px;
+  font-size: 18px;
+}
+
+.prevMentor{
+  display: inline-block;
+  width: 150px;
+  font-size: 18px;
+}
+
+.car{
+  display: inline-block;
+  width: 150px;
+  font-size: 18px;
+}
+
+.multipleDays{
+  display: inline-block;
+  width: 150px;
+  font-size: 18px;
+}
+
+.shirtSize{
+  display: inline-block;
+  width: 150px;
+  font-size: 18px;
+}
+
+.tablehead{
+  font-size: 12px;
+  width:  30px;
+}
 /*  --------------- START PROGRAM PAGE --------------- */
 
 .programPageContainer{
@@ -396,6 +497,8 @@ a{
   border-bottom-right-radius: 10px;
   margin-top: -1px;
 }
+
+
 /*  --------------- END SortedInstructorsCard COMPONENT --------------- */
 
 
